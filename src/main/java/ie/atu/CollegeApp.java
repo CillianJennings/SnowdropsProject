@@ -9,5 +9,6 @@ public class CollegeApp {
         String choice = "y";
         while (choice.equalsIgnoreCase("y")) {
             System.out.print("Enter something: ");
+        }
     }
 }
