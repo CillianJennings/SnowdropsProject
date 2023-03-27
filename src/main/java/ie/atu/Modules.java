@@ -1,6 +1,6 @@
 package ie.atu;
 
-public class Modules {
+public class Modules extends Student, Lecture, Modules{
 
     private String name;
     private String credits;

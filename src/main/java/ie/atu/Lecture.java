@@ -2,7 +2,7 @@ package ie.atu;
 
 import java.util.Scanner;
 
-public class Lecture {
+public class Lecture extends Student{
 
     private String module_name;
     private String lecturer_name;
