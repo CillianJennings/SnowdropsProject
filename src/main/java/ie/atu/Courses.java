@@ -8,6 +8,12 @@ public class Courses extends Student{
     private int length;
 
     public Courses() {
+        super();
+        id = 0;
+        name = "";
+        points = 0;
+        length = 0;
+
     }
 
     public double getId() {

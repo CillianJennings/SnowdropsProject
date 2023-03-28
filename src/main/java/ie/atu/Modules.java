@@ -1,22 +1,23 @@
 package ie.atu;
 
-public class Modules extends Student, Lecture, Modules{
+public class Modules extends Student {
 
     private String name;
     private String credits;
-    private String module_id;
+    private double module_id;
     private String year;
-    private String course_id;
+    private double course_id;
     private String lecturer;
 
 
 
     public Modules() {
+        super();
         name = "";
         credits = "";
-        module_id = "";
+        module_id = 0;
         year = "";
-        course_id = "";
+        course_id = 0;
         lecturer = "";
     }
 
@@ -36,11 +37,11 @@ public class Modules extends Student, Lecture, Modules{
         this.credits = credits;
     }
 
-    public String getModule_id() {
+    public double getModule_id() {
         return module_id;
     }
 
-    public void setModule_id(String module_id) {
+    public void setModule_id(double module_id) {
         this.module_id = module_id;
     }
 
@@ -52,11 +53,13 @@ public class Modules extends Student, Lecture, Modules{
         this.year = year;
     }
 
-    public String getCourse_id() {
+    @Override
+    public double getCourse_id() {
         return course_id;
     }
 
-    public void setCourse_id(String course_id) {
+    @Override
+    public void setCourse_id(double course_id) {
         this.course_id = course_id;
     }
 
@@ -68,12 +71,15 @@ public class Modules extends Student, Lecture, Modules{
         this.lecturer = lecturer;
     }
 
-    public Modules(String name, String credits, String module_id, String year, String course_id, String lecturer) {
-        this.name = name;
-        this.credits = credits;
-        this.module_id = module_id;
-        this.year = year;
-        this.course_id = course_id;
-        this.lecturer = lecturer;
+    @Override
+    public String toString() {
+        return "Modules{" +
+                "name='" + name + '\'' +
+                ", credits='" + credits + '\'' +
+                ", module_id=" + module_id +
+                ", year='" + year + '\'' +
+                ", course_id=" + course_id +
+                ", lecturer='" + lecturer + '\'' +
+                '}';
     }
 }
