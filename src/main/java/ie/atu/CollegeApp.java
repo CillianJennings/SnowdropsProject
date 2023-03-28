@@ -1,6 +1,7 @@
 package ie.atu;
 
 import java.util.Scanner;
+
 public class CollegeApp {
     public static void main(String[] args) {
         System.out.println("Welcome to the College Database");
@@ -10,17 +11,16 @@ public class CollegeApp {
         while (choice.equalsIgnoreCase("y")) {
             System.out.print("Enter student ID: ");
             String studentID = sc.nextLine();
-        }
 
-        Student s = CollegeDB.getStudent(student_id);
 
-        System.out.println();
-        if (s != null) {
-            System.out.println(s.toString());
-            System.out.println("Student ID: " + s.getStudent_id());
-        }
-        else {
-            System.out.println("No product matches this product code.");
+            Student s = CollegeDB.getStudent(studentID);
+
+            System.out.println();
+            if (s != null) {
+                System.out.println(s.toString());
+            } else {
+                System.out.println("No product matches this product code.");
+            }
         }
     }
 }
