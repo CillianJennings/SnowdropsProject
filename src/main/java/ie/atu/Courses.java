@@ -1,6 +1,6 @@
 package ie.atu;
 
-public class Courses {
+public class Courses extends Student{
 
     private double id;
     private String name;
@@ -8,6 +8,12 @@ public class Courses {
     private int length;
 
     public Courses() {
+        super();
+        id = 0;
+        name = "";
+        points = 0;
+        length = 0;
+
     }
 
     public double getId() {

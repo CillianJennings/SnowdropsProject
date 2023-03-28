@@ -1,13 +1,14 @@
 package ie.atu;
 
-public class Student {
+public class Student implements College {
 
     private String first_name;
     private String last_name;
-    private String address;
     private String email;
-    private String grade;
-    private double id;
+    private double course_id;
+    private double student_id;
+    private double address_id;
+    private double grade_id;
 
     public Student() {
     }
@@ -28,14 +29,6 @@ public class Student {
         this.last_name = last_name;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -44,30 +37,48 @@ public class Student {
         this.email = email;
     }
 
-    public String getGrade() {
-        return grade;
+    public double getCourse_id() {
+        return course_id;
     }
 
-    public void setGrade(String grade) {
-        this.grade = grade;
+    public void setCourse_id(double course_id) {
+        this.course_id = course_id;
     }
 
-    public double getId() {
-        return id;
+    public double getStudent_id() {
+        return student_id;
     }
 
-    public void setId(double id) {
-        this.id = id;
+    public void setStudent_id(double student_id) {
+        this.student_id = student_id;
+    }
+
+    public double getAddress_id() {
+        return address_id;
+    }
+
+    public void setAddress_id(double address_id) {
+        this.address_id = address_id;
+    }
+
+    public double getGrade_id() {
+        return grade_id;
+    }
+
+    public void setGrade_id(double grade_id) {
+        this.grade_id = grade_id;
     }
 
     @Override
     public String toString() {
-        return "Student" + '\n' +
-                "First_name: " + first_name + '\n' +
-                "Last_name: " + last_name + '\n' +
-                "Address: " + address + '\n' +
-                "Email: " + email + '\n' +
-                "Grade: " + grade + '\n' +
-                "ID: " + id + '\n';
+        return "Student{" +
+                "first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", email='" + email + '\'' +
+                ", course_id=" + course_id +
+                ", student_id=" + student_id +
+                ", address_id=" + address_id +
+                ", grade_id=" + grade_id +
+                '}';
     }
 }
