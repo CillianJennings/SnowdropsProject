@@ -1,23 +1,19 @@
 package ie.atu;
 
 public class CollegeDB {
-    public static College getProduct(String productCode) {
-        // In a more realistic application, this code would
-        // get the data for the product from a file or database
-        // For now, this code just uses if/else statements
-        // to return the correct product data
+    public static Student getStudent(String studentID) {
 
-        College p = null;
+        Student s = null;
 
-        if (productCode.equalsIgnoreCase("java"))
+        if (studentID.equalsIgnoreCase("java"))
         {
             Student myStudent = new Student();
-            myStudent.setStudent_id("G00456");
+            myStudent.setStudent_id(00456);
             myStudent.setFirst_name("Jane");
             myStudent.setLast_name("Doe");
-            myStudent.setCourse_id("G000123");
-            p = myStudent;
+            myStudent.setCourse_id(00012);
+            s = myStudent;
         }
-        return p;
+        return s;
     }
 }
