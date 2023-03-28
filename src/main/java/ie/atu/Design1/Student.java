@@ -1,4 +1,6 @@
-package ie.atu;
+package ie.atu.Design1;
+
+import ie.atu.Design1.College;
 
 public class Student implements College {
 

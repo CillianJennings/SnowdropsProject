@@ -1,4 +1,4 @@
-package SQLDatabase;
+package ie.atu.SQL;
 
 import java.sql.*;
 
