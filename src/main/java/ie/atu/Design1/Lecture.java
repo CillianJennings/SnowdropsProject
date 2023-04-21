@@ -2,46 +2,42 @@ package ie.atu.Design1;
 
 public class Lecture extends Student {
 
-    private String module_name;
-    private String lecturer_name;
-    private double module_id;
+    private double lecturer_id;
+    private String first_name;
+    private String last_name;
 
     public Lecture() {
         super();
-        module_name = "";
-        lecturer_name = "";
-        module_id = 0;
+        lecturer_id = 0;
+        first_name = "";
+        last_name = "";
     }
 
-    public String getModule_name() {
-        return module_name;
+    public double getLecturer_id() {
+        return lecturer_id;
     }
 
-    public void setModule_name(String module_name) {
-        this.module_name = module_name;
-    }
-
-    public String getLecturer_name() {
-        return lecturer_name;
-    }
-
-    public void setLecturer_name(String lecturer_name) {
-        this.lecturer_name = lecturer_name;
-    }
-
-    public double getModule_id() {
-        return module_id;
-    }
-
-    public void setModule_id(double module_id) {
-        this.module_id = module_id;
+    public void setLecturer_id(double lecturer_id) {
+        this.lecturer_id = lecturer_id;
     }
 
     @Override
-    public String toString() {
-        return "Lecture{" +
-                "module_name='" + module_name + '\'' +
-                ", lecturer_name='" + lecturer_name + '\'' +
-                ", module_id=" + module_id;
+    public String getFirst_name() {
+        return first_name;
+    }
+
+    @Override
+    public void setFirst_name(String first_name) {
+        this.first_name = first_name;
+    }
+
+    @Override
+    public String getLast_name() {
+        return last_name;
+    }
+
+    @Override
+    public void setLast_name(String last_name) {
+        this.last_name = last_name;
     }
 }
