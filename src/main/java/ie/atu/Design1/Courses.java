@@ -1,6 +1,6 @@
-package ie.atu;
+package ie.atu.Design1;
 
-public class Courses extends Student{
+public class Courses extends Student {
 
     private double id;
     private String name;

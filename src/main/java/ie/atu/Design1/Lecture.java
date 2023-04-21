@@ -1,6 +1,6 @@
-package ie.atu;
+package ie.atu.Design1;
 
-public class Lecture extends Student{
+public class Lecture extends Student {
 
     private String module_name;
     private String lecturer_name;
