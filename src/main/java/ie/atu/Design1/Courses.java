@@ -2,26 +2,25 @@ package ie.atu.Design1;
 
 public class Courses extends Student {
 
-    private double id;
+    private double course_id;
     private String name;
-    private int points;
-    private int length;
+    private double points;
+    private String length;
 
     public Courses() {
         super();
-        id = 0;
+        course_id = 0;
         name = "";
         points = 0;
-        length = 0;
-
+        length = "";
     }
 
-    public double getId() {
-        return id;
+    public double getCourse_id() {
+        return course_id;
     }
 
-    public void setId(double id) {
-        this.id = id;
+    public void setCourse_id(double course_id) {
+        this.course_id = course_id;
     }
 
     public String getName() {
@@ -32,28 +31,19 @@ public class Courses extends Student {
         this.name = name;
     }
 
-    public int getPoints() {
+    public double getPoints() {
         return points;
     }
 
-    public void setPoints(int points) {
+    public void setPoints(double points) {
         this.points = points;
     }
 
-    public int getLength() {
+    public String getLength() {
         return length;
     }
 
-    public void setLength(int length) {
+    public void setLength(String length) {
         this.length = length;
-    }
-
-    @Override
-    public String toString() {
-        return "Courses" +
-                "id= " + id + '\n'+
-                "name= " + name + '\n' +
-                "points= " + points + '\n'+
-                "length= " + length +'\n';
     }
 }
