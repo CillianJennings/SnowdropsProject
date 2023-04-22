@@ -4,7 +4,7 @@ import ie.atu.Design1.College;
 
 public class Student implements College {
 
-    private double student_id;
+    private String student_id;
     private String first_name;
     private String last_name;
     private String email;
@@ -12,11 +12,11 @@ public class Student implements College {
     public Student() {
     }
 
-    public double getStudent_id() {
+    public String getStudent_id() {
         return student_id;
     }
 
-    public void setStudent_id(double student_id) {
+    public void setStudent_id(String student_id) {
         this.student_id = student_id;
     }
 
