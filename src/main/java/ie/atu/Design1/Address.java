@@ -2,24 +2,24 @@ package ie.atu.Design1;
 
 public class Address extends Student {
 
-    private double address_id;
+    private String address_id;
     private String postal_code;
     private String county;
     private String street;
 
     public Address() {
         super();
-        address_id = 0;
+        address_id = "";
         postal_code = "";
         county = "";
         street = "";
     }
 
-    public double getAddress_id() {
+    public String getAddress_id() {
         return address_id;
     }
 
-    public void setAddress_id(double address_id) {
+    public void setAddress_id(String address_id) {
         this.address_id = address_id;
     }
 

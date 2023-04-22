@@ -2,31 +2,34 @@ package ie.atu.Design1;
 
 public class Grades {
 
-    private double grade_id;
-    private double grade;
-    private double year;
+    private String grade_id;
+    private String grade;
+    private String year;
 
-    public double getGrade_id() {
+    public Grades() {
+    }
+
+    public String getGrade_id() {
         return grade_id;
     }
 
-    public void setGrade_id(double grade_id) {
+    public void setGrade_id(String grade_id) {
         this.grade_id = grade_id;
     }
 
-    public double getGrade() {
+    public String getGrade() {
         return grade;
     }
 
-    public void setGrade(double grade) {
+    public void setGrade(String grade) {
         this.grade = grade;
     }
 
-    public double getYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setYear(double year) {
+    public void setYear(String year) {
         this.year = year;
     }
 }

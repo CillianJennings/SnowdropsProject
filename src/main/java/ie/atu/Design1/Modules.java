@@ -1,25 +1,20 @@
 package ie.atu.Design1;
 
-public class Modules extends Student {
+public class Modules {
 
-    private double module_id;
+    private String module_id;
     private String name;
-    private double credits;
+    private String credits;
     private String year;
 
     public Modules() {
-        super();
-        module_id = 0;
-        name = "";
-        credits = 0;
-        year = "";
     }
 
-    public double getModule_id() {
+    public String getModule_id() {
         return module_id;
     }
 
-    public void setModule_id(double module_id) {
+    public void setModule_id(String module_id) {
         this.module_id = module_id;
     }
 
@@ -31,11 +26,11 @@ public class Modules extends Student {
         this.name = name;
     }
 
-    public double getCredits() {
+    public String getCredits() {
         return credits;
     }
 
-    public void setCredits(double credits) {
+    public void setCredits(String credits) {
         this.credits = credits;
     }
 
