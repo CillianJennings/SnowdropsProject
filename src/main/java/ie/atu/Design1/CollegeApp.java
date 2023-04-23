@@ -24,6 +24,7 @@ public class CollegeApp {
                     break;
                 case "2":
                     tables();
+                    write();
                     System.out.println("Write to College");
                     break;
                 case "3":
@@ -179,6 +180,100 @@ public class CollegeApp {
                 break;
             default:
                 System.out.println("Not a choice");
+                break;
+        }
+    }
+
+    public static void write() {
+        System.out.println("Please select the section where you want insert information\n1:\tStudent\n2:\tCourse\n3:\tAddress\n");
+        Scanner keyboard = new Scanner(System.in);
+        int option = keyboard.nextInt();
+
+        switch(option) {
+
+            // Enter information for student table
+            case 1:
+
+                try { Connection connection = DatabaseUtils.getConnection();
+                    PreparedStatement record = connection.prepareStatement("INSERT INTO student(first_name, last_name, id, email) VALUES (?,?,?,?)");
+                    System.out.println("Please enter the first name for the student\n");
+                    Scanner type = new Scanner(System.in);
+                    String first_name = type.nextLine();
+                    record.setString(1, first_name);
+                    System.out.println("Please enter the last name for the student\n");
+                    String last_name = type.nextLine();
+                    record.setString(2, last_name);
+                    System.out.println("Please enter the student id for the student\n");
+                    String id = type.nextLine();
+                    record.setString(3, id);
+                    System.out.println("Please enter the email for the student\n");
+                    String email = type.nextLine();
+                    record.setString(4, email);
+                    record.executeUpdate();
+                    System.out.println("Information has been added to the student table\n");
+
+                } catch (SQLException e) {
+                    System.out.println("The system failed to add the information\n");
+                    e.printStackTrace();
+                }
+                break;
+
+                // Add course information to the database
+            case 2:
+
+                try { Connection connection = DatabaseUtils.getConnection();
+                    PreparedStatement record = connection.prepareStatement("INSERT INTO course(name, id, points, length) VALUES (?,?,?,?)");
+                    System.out.println("Please enter the name for the course\n");
+                    Scanner scan = new Scanner(System.in);
+                    String name = scan.nextLine();
+                    record.setString(1, name);
+                    System.out.println("Please enter the id for the course\n");
+                    String id = scan.nextLine();
+                    record.setString(2, id);
+                    System.out.println("Please enter the points for the course\n");
+                    String points = scan.nextLine();
+                    record.setString(3, points);
+                    System.out.println("Please enter the length for the course\n");
+                    String length = scan.nextLine();
+                    record.setString(4, length);
+                    record.executeUpdate();
+                    System.out.println("Information has been added to the course table\n");
+
+                } catch (SQLException e) {
+                    System.out.println("The system failed to add the information\n");
+                    e.printStackTrace();
+                }
+                break;
+
+                // Add information to the address table
+            case 3:
+
+                try { Connection connection = DatabaseUtils.getConnection();
+                    PreparedStatement record = connection.prepareStatement("INSERT INTO address(student_id, postal_code, county, street) VALUES (?,?,?,?)");
+                    System.out.println("Please enter the id for the address\n");
+                    Scanner input = new Scanner(System.in);
+                    String student_id = input.nextLine();
+                    record.setString(1, student_id);
+                    System.out.println("Please enter the postal code for the address\n");
+                    String postal_code = input.nextLine();
+                    record.setString(2, postal_code);
+                    System.out.println("Please enter the county\n");
+                    String county = input.nextLine();
+                    record.setString(3, county);
+                    System.out.println("Please enter the name of the street\n");
+                    String street = input.nextLine();
+                    record.setString(4, street);
+                    record.executeUpdate();
+                    System.out.println("Information has been added to the course table\n");
+
+                } catch (SQLException e) {
+                    System.out.println("The system failed to add the information\n");
+                    e.printStackTrace();
+                }
+                break;
+
+            default:
+                System.out.println("Invalid option. Please try again\n");
                 break;
         }
     }
