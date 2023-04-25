@@ -17,7 +17,7 @@ public class CollegeApp {
 
             String operation = scan.nextLine();
 
-            switch(operation){
+            switch (operation) {
                 case "1":
                     tables();
                     read();
@@ -33,6 +33,7 @@ public class CollegeApp {
                     break;
                 case "4":
                     tables();
+                    delete();
                     System.out.println("Delete from College");
                     break;
                 default:
@@ -46,13 +47,13 @@ public class CollegeApp {
         }
     }
 
-    public static void tables(){    //Writes all tables in College DB to an arraylist, then prints the arraylist
+    public static void tables() {    //Writes all tables in College DB to an arraylist, then prints the arraylist
         String selectSQL = "SHOW tables";
         ArrayList<String> tables = new ArrayList<>();
 
         try (Connection connection = DatabaseUtils.getConnection();
              Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(selectSQL)){
+             ResultSet resultSet = statement.executeQuery(selectSQL)) {
 
             while (resultSet.next()) {
                 tables.add(resultSet.getString("Tables_in_college"));
@@ -69,7 +70,7 @@ public class CollegeApp {
         Scanner scan = new Scanner(System.in);
         String choice = scan.nextLine();
 
-        switch(choice) {
+        switch (choice) {
             case "1":   //Read from one chosen table in the college DB
                 System.out.println("Type in table you would like to read from: ");
                 String input = scan.nextLine();
@@ -92,7 +93,7 @@ public class CollegeApp {
                         }
                     }
 
-                    if(input.equals("address")) {
+                    if (input.equals("address")) {
                         System.out.println("Address ID\tStudent ID\tPostal Code\t\tCounty\t\tStreet");
                         while (resultSet.next()) {
                             Address address = new Address();
@@ -106,7 +107,7 @@ public class CollegeApp {
                         }
                     }
 
-                    if(input.equals("course")) {
+                    if (input.equals("course")) {
                         System.out.println("Course ID\tName\t\t\tPoints\t\tLength");
                         while (resultSet.next()) {
                             Courses course = new Courses();
@@ -118,16 +119,16 @@ public class CollegeApp {
                             System.out.println(course.getCourse_id() + "\t\t\t" + course.getName() + "\t\t" + course.getPoints() + "\t\t\t" + course.getLength());
                         }
                     }
-                }catch(SQLException e) {
+                } catch (SQLException e) {
                     System.out.println("Not an option");
                 }
                 break;
             case "2":   //Read from multiple chosen DB in college
                 System.out.println("1 - Read from Student and Address\n2 - Read from Student and Course");
                 int mulChoice = scan.nextInt();
-                if(mulChoice == 1){   //Joins student and address together and reads it
+                if (mulChoice == 1) {   //Joins student and address together and reads it
                     selectSQL = "SELECT s.first_name, s.last_name, s.email, a.postal_code, a.county, a.street FROM student s" +
-                                " JOIN address a ON s.id = a.student_id";
+                            " JOIN address a ON s.id = a.student_id";
 
                     try (Connection connection = DatabaseUtils.getConnection();
                          Statement statement = connection.createStatement();
@@ -147,11 +148,11 @@ public class CollegeApp {
                                     "\t\t\t" + address.getCounty() + "\t\t" + address.getStreet());
                         }
 
-                    }catch(SQLException e) {
+                    } catch (SQLException e) {
                         System.out.println("Not an option");
                     }
                 }
-                if(mulChoice == 2){   //Joins student and course together and reads it
+                if (mulChoice == 2) {   //Joins student and course together and reads it
                     selectSQL = "SELECT s.first_name, s.last_name, s.email, c.name, c.points, c.length from student s" +
                             " JOIN course_student i ON s.id = i.student_id" +
                             " JOIN course c ON i.course_id = c.id";
@@ -173,7 +174,7 @@ public class CollegeApp {
                             System.out.println(course.getFirst_name() + "\t\t" + course.getLast_name() + "\t\t" + course.getEmail() + "\t\t" + course.getName() +
                                     "\t\t" + course.getPoints() + "\t\t\t" + course.getLength());
                         }
-                    }catch(SQLException e) {
+                    } catch (SQLException e) {
                         System.out.println("Not an option");
                     }
                 }
@@ -189,12 +190,13 @@ public class CollegeApp {
         Scanner keyboard = new Scanner(System.in);
         int option = keyboard.nextInt();
 
-        switch(option) {
+        switch (option) {
 
             // Enter information for student table
             case 1:
 
-                try { Connection connection = DatabaseUtils.getConnection();
+                try {
+                    Connection connection = DatabaseUtils.getConnection();
                     PreparedStatement record = connection.prepareStatement("INSERT INTO student(first_name, last_name, id, email) VALUES (?,?,?,?)");
                     System.out.println("Please enter the first name for the student\n");
                     Scanner type = new Scanner(System.in);
@@ -218,10 +220,11 @@ public class CollegeApp {
                 }
                 break;
 
-                // Add course information to the database
+            // Add course information to the database
             case 2:
 
-                try { Connection connection = DatabaseUtils.getConnection();
+                try {
+                    Connection connection = DatabaseUtils.getConnection();
                     PreparedStatement record = connection.prepareStatement("INSERT INTO course(name, id, points, length) VALUES (?,?,?,?)");
                     System.out.println("Please enter the name for the course\n");
                     Scanner scan = new Scanner(System.in);
@@ -245,10 +248,11 @@ public class CollegeApp {
                 }
                 break;
 
-                // Add information to the address table
+            // Add information to the address table
             case 3:
 
-                try { Connection connection = DatabaseUtils.getConnection();
+                try {
+                    Connection connection = DatabaseUtils.getConnection();
                     PreparedStatement record = connection.prepareStatement("INSERT INTO address(student_id, postal_code, county, street) VALUES (?,?,?,?)");
                     System.out.println("Please enter the id for the address\n");
                     Scanner input = new Scanner(System.in);
@@ -275,9 +279,10 @@ public class CollegeApp {
             default:
                 System.out.println("Invalid option. Please try again\n");
                 break;
+
+
         }
     }
-
 
     public static void update(){
         System.out.println("Choose a table to update");
@@ -465,4 +470,64 @@ public class CollegeApp {
     }
 }
 
+    public static void delete() {
 
+        System.out.println("Please select the section where you want delete information\n1:\tStudent\n2:\tCourse\n3:\tAddress\n");
+        Scanner key = new Scanner(System.in);
+        int choice = key.nextInt();
+
+        switch (choice) {
+
+            // Enter information for student table
+            case 1:
+
+                try {
+                    Connection connection = DatabaseUtils.getConnection();
+                    PreparedStatement stmt = connection.prepareStatement("DELETE FROM student WHERE id = ");
+                    System.out.println("Please enter the id number for the student\n");
+                    Scanner type = new Scanner(System.in);
+                    String No = type.nextLine();
+                    stmt.executeUpdate();
+
+
+                } catch (SQLException e) {
+                    System.out.println("The system failed to remove the information\n");
+                    e.printStackTrace();
+                }
+                break;
+
+            case 2:
+
+                try {
+                    Connection connection = DatabaseUtils.getConnection();
+                    PreparedStatement stmt = connection.prepareStatement("DELETE FROM course WHERE id = ");
+                    System.out.println("Please enter the id number for the course\n");
+                    Scanner type = new Scanner(System.in);
+                    String No = type.nextLine();
+                    stmt.executeUpdate();
+
+
+                } catch (SQLException e) {
+                    System.out.println("The system failed to remove the information\n");
+                    e.printStackTrace();
+                }
+                break;
+            case 3:
+
+                try {
+                    Connection connection = DatabaseUtils.getConnection();
+                    PreparedStatement stmt = connection.prepareStatement("DELETE FROM address WHERE id = ");
+                    System.out.println("Please enter the id number for the address\n");
+                    Scanner type = new Scanner(System.in);
+                    String No = type.nextLine();
+                    stmt.executeUpdate();
+
+
+                } catch (SQLException e) {
+                    System.out.println("The system failed to remove the information\n");
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+    }
