@@ -29,7 +29,7 @@ public class CollegeApp {
                     break;
                 case "3":
                     tables();
-                    System.out.println("Update College");
+                    update();
                     break;
                 case "4":
                     tables();
@@ -284,6 +284,191 @@ public class CollegeApp {
         }
     }
 
+    public static void update(){
+        System.out.println("Choose a table to update");
+        System.out.println("1 - Student\n2 - Address\n3 - Course");
+        Scanner scan = new Scanner(System.in);
+        int choice = scan.nextInt();
+        String setColumn = "";
+        String updateSQL;
+        int correctID = 0;
+        int parseInt = 0;
+        int inputID = 0;
+        int exit;
+
+        switch(choice) {
+            case 1:
+                System.out.println("Please enter the ID of the row you want to update:");
+
+                try (Connection connection = DatabaseUtils.getConnection();
+                     Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery("SELECT id FROM student")) {
+                    System.out.print("Student IDs: ");
+                    while (resultSet.next()) {
+                        Student student = new Student();
+                        student.setStudent_id(resultSet.getString("id"));
+                        System.out.print(student.getStudent_id() + ", ");
+                        parseInt = Integer.parseInt(student.getStudent_id());
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error getting IDs");
+                }
+
+                while(correctID == 0) {
+                    inputID = scan.nextInt();
+                    if(inputID > 0 && inputID <= parseInt){correctID = 1;}
+                    else{System.out.println("Please enter an existing ID");}
+                }
+
+                exit = 1;
+                while(exit == 1) {
+                    System.out.println("Please select the column you would like to update:\n1 - First Name\n2 - Last Name\n3 - Email");
+                    int columnOption = scan.nextInt();
+                    String bugfix = scan.nextLine(); //Required to make the next scan.nextLine() work
+                    if (columnOption == 1) {
+                        setColumn = "first_name";
+                    }
+                    if (columnOption == 2) {
+                        setColumn = "last_name";
+                    }
+                    if (columnOption == 3) {
+                        setColumn = "email";
+                    }
+
+                    System.out.println("Type in the updated information: ");
+                    String update = scan.nextLine();
+
+                    updateSQL = "UPDATE student SET " + setColumn + " = '" + update + "' WHERE id = '" + inputID + "'";
+
+                    try (Connection connection = DatabaseUtils.getConnection();
+                         Statement statement = connection.createStatement()) {
+                        int rowsUpdated = statement.executeUpdate(updateSQL);
+                        System.out.println("Rows updated: " + rowsUpdated);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Press 1 to update another column\nOtherwise press any other number to exit");
+                    exit = scan.nextInt();
+                }
+                break;
+            case 2:
+                System.out.println("Please enter the ID of the row you want to update:");
+
+                try (Connection connection = DatabaseUtils.getConnection();
+                     Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery("SELECT id FROM address")) {
+                    System.out.print("Address IDs: ");
+                    while (resultSet.next()) {
+                        Student student = new Student();
+                        student.setStudent_id(resultSet.getString("id"));
+                        System.out.print(student.getStudent_id() + ", ");
+                        parseInt = Integer.parseInt(student.getStudent_id());
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error getting IDs");
+                }
+
+                while(correctID == 0) {
+                    inputID = scan.nextInt();
+                    if(inputID > 0 && inputID <= parseInt){correctID = 1;}
+                    else{System.out.println("Please enter an existing ID");}
+                }
+
+                exit = 1;
+                while(exit == 1) {
+                    System.out.println("Please select the column you would like to update:\n1 - Student ID\n2 - Postal Code\n3 - County\n4 - Street");
+                    int columnOption = scan.nextInt();
+                    String bugfix = scan.nextLine(); //Required to make the next scan.nextLine() work
+                    if (columnOption == 1) {
+                        setColumn = "student_id";
+                    }
+                    if (columnOption == 2) {
+                        setColumn = "postal_code";
+                    }
+                    if (columnOption == 3) {
+                        setColumn = "county";
+                    }
+                    if (columnOption == 4) {
+                        setColumn = "street";
+                    }
+
+                    System.out.println("Type in the updated information: ");
+                    String update = scan.nextLine();
+
+                    updateSQL = "UPDATE address SET " + setColumn + " = '" + update + "' WHERE id = '" + inputID + "'";
+
+                    try (Connection connection = DatabaseUtils.getConnection();
+                         Statement statement = connection.createStatement()) {
+                        int rowsUpdated = statement.executeUpdate(updateSQL);
+                        System.out.println("Rows updated: " + rowsUpdated);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Press 1 to update another column\nOtherwise press any other number to exit");
+                    exit = scan.nextInt();
+                }
+                break;
+            case 3:
+                System.out.println("Please enter the ID of the row you want to update:");
+
+                try (Connection connection = DatabaseUtils.getConnection();
+                     Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery("SELECT id FROM course")) {
+                    System.out.print("Address IDs: ");
+                    while (resultSet.next()) {
+                        Student student = new Student();
+                        student.setStudent_id(resultSet.getString("id"));
+                        System.out.print(student.getStudent_id() + ", ");
+                        parseInt = Integer.parseInt(student.getStudent_id());
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error getting IDs");
+                }
+
+                while(correctID == 0) {
+                    inputID = scan.nextInt();
+                    if(inputID > 0 && inputID <= parseInt){correctID = 1;}
+                    else{System.out.println("Please enter an existing ID");}
+                }
+
+                exit = 1;
+                while(exit == 1) {
+                    System.out.println("Please select the column you would like to update:\n1 - Name\n2 - Points\n3 - Length");
+                    int columnOption = scan.nextInt();
+                    String bugfix = scan.nextLine(); //Required to make the next scan.nextLine() work
+                    if (columnOption == 1) {
+                        setColumn = "name";
+                    }
+                    if (columnOption == 2) {
+                        setColumn = "points";
+                    }
+                    if (columnOption == 3) {
+                        setColumn = "length";
+                    }
+
+                    System.out.println("Type in the updated information: ");
+                    String update = scan.nextLine();
+
+                    updateSQL = "UPDATE course SET " + setColumn + " = '" + update + "' WHERE id = '" + inputID + "'";
+
+                    try (Connection connection = DatabaseUtils.getConnection();
+                         Statement statement = connection.createStatement()) {
+                        int rowsUpdated = statement.executeUpdate(updateSQL);
+                        System.out.println("Rows updated: " + rowsUpdated);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Press 1 to update another column\nOtherwise press any other number to exit");
+                    exit = scan.nextInt();
+                }
+                break;
+            default:
+                System.out.println("Not a choice");
+                break;
+        }
+
+    }
+}
 
     public static void delete() {
 
