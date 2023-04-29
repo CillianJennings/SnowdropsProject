@@ -6,6 +6,10 @@ Error with account Sign ins:
 
 DenisJ123 = CiaraC03
 
-Ellen signed in with two account: 1. ellenmcintyre and ellenmcintyre123
+Ellen signed in with two accounts: ellenmcintyre and ellenmcintyre123
 
 Chinonso Account is the G00403720
+
+Remainging tasks to complete:
+Interface
+Testing
