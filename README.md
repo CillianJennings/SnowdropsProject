@@ -10,6 +10,6 @@ Ellen signed in with two accounts: ellenmcintyre and ellenmcintyre123
 
 Chinonso Account is the G00403720
 
-Remainging tasks to complete:
-Interface
+Remaining tasks to complete:
+Interface,
 Testing
