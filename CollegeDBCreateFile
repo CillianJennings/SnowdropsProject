@@ -1,4 +1,4 @@
-CREATE DATABASE college;
+CREATECREATE DATABASE college;
 USE college;
 
 CREATE TABLE student (
@@ -33,6 +33,30 @@ CREATE TABLE course_student (
     PRIMARY KEY (student_id),
     FOREIGN KEY (student_id) REFERENCES student(id),
     FOREIGN KEY (course_id) REFERENCES course(id)
+);
+
+CREATE TABLE lecturer (
+    id INT NOT NULL AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE module (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    credits VARCHAR(50) NOT NULL,
+    year VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE lecturer_module (
+    module_id INT NOT NULL,
+    lecturer_id INT NOT NULL,
+    PRIMARY KEY (module_id),
+    FOREIGN KEY (module_id) REFERENCES module(id),
+    FOREIGN KEY (lecturer_id) REFERENCES lecturer(id)   
 );
 
 INSERT INTO student (first_name, last_name, email) VALUES
@@ -77,3 +101,49 @@ INSERT INTO course_student (student_id, course_id) VALUES
     (8, 5),
     (9, 5),
     (10, 5);
+
+INSERT INTO lecturer (first_name, last_name, email) VALUES
+    ('Paul', 'Bates', 'paul.lec@atu.ie'),
+    ('Robert', 'Johnson', 'robert.lec@atu.ie'),
+    ('Joseph', 'Martinez', 'joseph.lec@atu.ie'),
+    ('Charles', 'Dickens', 'charles.lec@atu.ie'),
+    ('Matthew', 'Lee', 'matthew.lec@atu.ie'),
+    ('Patricia', 'Miller', 'patricia.lec@atu.ie'),
+    ('Jessica', 'Anderson', 'jessica.lec@atu.ie'),
+    ('Elizabeth', 'Martin', 'elizabeth.lec@atu.ie'),
+    ('Susan', 'Moore', 'susan.lec@atu.ie'),
+    ('Nancy', 'Rodriguez', 'nancy.lec@atu.ie');
+
+INSERT INTO module (name, credits, year) VALUES
+    ('Maths 1', '10', '1st Year');	
+    ('Maths 2', '10', '2nd Year'),
+    ('Maths 3', '10', '3rd Year'),
+    ('Maths 4', '10', '4th Year'),
+    ('Programming', '5', '1st Year'),
+    ('Electronic Design', '5', '2nd Year'),
+    ('Accounting', '10', '3rd Year'),
+    ('Economics 1', '10', '1st Year'),
+    ('Biology 4', '5', '4th Year'),
+    ('Physics 1', '5', '1st Year'),
+    ('Medicinal Herbs', '5', '2nd Year'),
+    ('Anatomy 5', '5', '5th Year'),
+    ('Drawing 3', '10', '3rd Year'),
+    ('Meditation', '5', '1st Year'),
+    ('Big Project', '10', '4th Year');
+
+INSERT INTO lecturer_module (lecturer_id, module_id) VALUES
+    ('1', '1'),
+    ('1', '2'),
+    ('2', '3'),
+    ('2', '4'),
+    ('3', '5'),
+    ('3', '6'),
+    ('4', '7'),
+    ('5', '8'),
+    ('5', '9'),
+    ('6', '10'),
+    ('7', '11'),
+    ('8', '12'),
+    ('9', '13'),
+    ('10', '14'),
+    ('10', '15');
