@@ -1,13 +1,18 @@
 package ie.atu.Design1;
 
-public class Modules {
+public class Module extends Lecturer {
 
     private String module_id;
     private String name;
     private String credits;
     private String year;
 
-    public Modules() {
+    public Module() {
+        super();
+        module_id = "";
+        name = "";
+        credits = "";
+        year = "";
     }
 
     public String getModule_id() {
