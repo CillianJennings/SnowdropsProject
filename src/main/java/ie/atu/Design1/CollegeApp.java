@@ -753,6 +753,60 @@ public class CollegeApp {
 
             case "5":
                 //This will be to update the lecturer details (first_name, last_name, email). Case 1 is very similar to how it should look
+                System.out.println("Please enter lecture to update their details:");
+                try (Connection connection = DatabaseUtils.getConnection();
+                     Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery("SELECT id FROM lecture")) {
+                    System.out.print("Lectures ID: ");
+                    while (resultSet.next()) {
+                        Lecturer lecturer = new Lecturer();
+                        lecturer.setLecturer_id(resultSet.getString("id"));
+                        array.add(resultSet.getString("id"));
+                        System.out.print(lecturer.getLecturer_id() + ", ");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error getting IDs");
+                }
+
+                while (correctID == 0) { //Checks if the ID inputted is actually an option using an arraylist
+                    inputID = scan.nextLine();
+                    if (array.contains(inputID)) {
+                        correctID = 1;
+                    } else {
+                        System.out.println("Please enter an existing ID");
+                    }
+                }
+
+                exit = "1";
+                while (exit.equals("1")) {
+                    System.out.println("Please select the column you would like to update:\n1 - First Name\n2 - Last Name\n3 - Email");
+                    int columnOption = scan.nextInt();
+                    String bugfix = scan.nextLine(); //Required to make the next scan.nextLine() work
+                    if (columnOption == 1) {
+                        setColumn = "first_name";
+                    }
+                    if (columnOption == 2) {
+                        setColumn = "last_name";
+                    }
+                    if (columnOption == 3) {
+                        setColumn = "email";
+                    }
+
+                    System.out.println("Type in the updated information: ");
+                    String update = scan.nextLine();
+
+                    updateSQL = "UPDATE lecture SET " + setColumn + " = '" + update + "' WHERE id = '" + inputID + "'";
+
+                    try (Connection connection = DatabaseUtils.getConnection();
+                         Statement statement = connection.createStatement()) {
+                        int rowsUpdated = statement.executeUpdate(updateSQL);
+                        System.out.println("Rows updated: " + rowsUpdated);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Press 1 to update another column\nOtherwise press any other number to exit");
+                    exit = scan.nextLine();
+                }
                 break;
 
             case "6":
