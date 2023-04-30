@@ -65,7 +65,7 @@ public class CollegeApp {
     }
 
     public static void read() {   //Read from either one or multiple tables in College DB
-        System.out.println("1 - Choose one table\n2 - View all tables");
+        System.out.println("1 - Choose one table\n2 - View all student details\n3 - View all lecturer details");
         Scanner scan = new Scanner(System.in);
         String choice = scan.nextLine();
         Formatter fmt = new Formatter();
@@ -133,6 +133,42 @@ public class CollegeApp {
                             System.out.println(fmt);
                         }
                     }
+
+                    if (input.equals("lecturer")) {
+                        fmt = new Formatter();
+                        fmt.format("%10s %14s %15s %22s", "Lecturer ID", "First Name", "Last Name", "Email");
+                        System.out.println(fmt);
+
+                        while (resultSet.next()) {
+                            Lecturer lecturer = new Lecturer();
+                            fmt = new Formatter();
+                            lecturer.setLecturer_id(resultSet.getString("id"));
+                            lecturer.setFirst_name(resultSet.getString("first_name"));
+                            lecturer.setLast_name(resultSet.getString("last_name"));
+                            lecturer.setEmail(resultSet.getString("email"));
+
+                            fmt.format("%10s %15s %15s %22s", lecturer.getLecturer_id(), lecturer.getFirst_name(), lecturer.getLast_name(), lecturer.getEmail());
+                            System.out.println(fmt);
+                        }
+                    }
+
+                    if (input.equals("module")) {
+                        fmt = new Formatter();
+                        fmt.format("%10s %20s %15s %15s", "Module ID", "Name", "Credits", "Year");
+                        System.out.println(fmt);
+
+                        while (resultSet.next()) {
+                            Module module = new Module();
+                            fmt = new Formatter();
+                            module.setModule_id(resultSet.getString("id"));
+                            module.setName(resultSet.getString("name"));
+                            module.setCredits(resultSet.getString("credits"));
+                            module.setYear(resultSet.getString("year"));
+
+                            fmt.format("%10s %20s %15s %15s", module.getModule_id(), module.getName(), module.getCredits(), module.getYear());
+                            System.out.println(fmt);
+                        }
+                    }
                 } catch (SQLException e) {
                     System.out.println("Not an option");
                 }
@@ -175,6 +211,41 @@ public class CollegeApp {
                     System.out.println("Failed to read from database");
                 }
                 break;
+
+            case "3":
+                //Joins lecturer and module
+                selectSQL = "SELECT l.id, l.first_name, l.last_name, l.email, m.name, m.credits, m.year FROM lecturer l" +
+                        " JOIN lecturer_module i ON l.id = i.lecturer_id" +
+                        " JOIN module m ON i.module_id = m.id";
+
+                try (Connection connection = DatabaseUtils.getConnection();
+                     Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery(selectSQL)) {
+
+                    fmt = new Formatter();
+                    fmt.format("%10s %14s %15s %22s %20s %15s %15s", "Lecturer ID", "First Name", "Last Name", "Email", "Module Name", "Credits", "Year");
+                    System.out.println(fmt);
+                    while (resultSet.next()) {
+                        Module module = new Module();
+                        fmt = new Formatter();
+                        module.setLecturer_id(resultSet.getString("id"));
+                        module.setFirst_name(resultSet.getString("first_name"));
+                        module.setLast_name(resultSet.getString("last_name"));
+                        module.setEmail(resultSet.getString("email"));
+                        module.setName(resultSet.getString("name"));
+                        module.setCredits(resultSet.getString("credits"));
+                        module.setYear(resultSet.getString("year"));
+
+                        fmt.format("%10s %15s %15s %22s %20s %15s %15s", module.getLecturer_id(), module.getFirst_name(), module.getLast_name(), module.getEmail(),
+                                module.getName(), module.getCredits(), module.getYear());
+                        System.out.println(fmt);
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println("Failed to read from database");
+                }
+                break;
+
             default:
                 System.out.println("Not a choice");
                 break;
@@ -182,7 +253,7 @@ public class CollegeApp {
     }
 
     public static void write() {
-        System.out.println("What information would you like to add to the database\n1 - New Student\n2 - New Course\n3 - Add a course to an existing student");
+        System.out.println("What information would you like to add to the database\n1 - New Student\n2 - New Course\n3 - Add a course to an existing student\n4 - New lecturer\n5 - New Module\n6 - Add a lecturer to an existing module");
         Scanner keyboard = new Scanner(System.in);
         String option = keyboard.nextLine();
 
@@ -334,6 +405,111 @@ public class CollegeApp {
                 }
                 break;
 
+            case "4":
+                try {
+                    Connection connection = DatabaseUtils.getConnection();
+                    PreparedStatement record = connection.prepareStatement("INSERT INTO lecturer(first_name, last_name, email) VALUES (?,?,?)");
+                    scan = new Scanner(System.in);
+                    Lecturer lecturer = new Lecturer();
+                    System.out.println("Please enter first name");
+                    lecturer.setFirst_name(scan.nextLine());
+                    record.setString(1, lecturer.getFirst_name());
+                    System.out.println("Please enter last name");
+                    lecturer.setLast_name(scan.nextLine());
+                    record.setString(2, lecturer.getLast_name());
+                    System.out.println("Please enter email");
+                    lecturer.setEmail(scan.nextLine());
+                    record.setString(3, lecturer.getEmail());
+                    record.executeUpdate();
+                    System.out.println("New lecturer has been added");
+
+                } catch (SQLException e) {
+                    System.out.println("The system failed to add the information");
+                    e.printStackTrace();
+                }
+                break;
+            case "5":
+                try {
+                    Connection connection = DatabaseUtils.getConnection();
+                    PreparedStatement record = connection.prepareStatement("INSERT INTO module(name, credits, year) VALUES (?,?,?)");
+                    scan = new Scanner(System.in);
+                    Module module = new Module();
+                    System.out.println("Please enter name");
+                    module.setName(scan.nextLine());
+                    record.setString(1, module.getName());
+                    System.out.println("Please enter credits");
+                    module.setCredits(scan.nextLine());
+                    record.setString(2, module.getCredits());
+                    System.out.println("Please enter year");
+                    module.setYear(scan.nextLine());
+                    record.setString(3, module.getYear());
+                    record.executeUpdate();
+                    System.out.println("New module has been added");
+
+                } catch (SQLException e) {
+                    System.out.println("The system failed to add the information");
+                    e.printStackTrace();
+                }
+                break;
+
+            case "6":
+                ArrayList<String> lecturerID = new ArrayList<>();
+                ArrayList<String> moduleID = new ArrayList<>();
+                String lecturerInput = "";
+                String moduleInput = "";
+                correctID = 0;
+                scan = new Scanner(System.in);
+
+                try (Connection connection = DatabaseUtils.getConnection()) {
+                    Statement statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery("SELECT id FROM module");
+                    System.out.print("Select the ID of the module that needs a lecturer: ");
+                    while (resultSet.next()) {
+                        Module module = new Module();
+                        module.setModule_id(resultSet.getString("id"));
+                        moduleID.add(resultSet.getString("id"));
+                        System.out.print(module.getModule_id() + ", ");
+                    }
+
+                    while (correctID == 0) {
+                        moduleInput = scan.nextLine();
+                        if (moduleID.contains(moduleInput)) {
+                            correctID = 1;
+                        } else {
+                            System.out.println("Please enter an existing ID");
+                        }
+                    }
+
+                    resultSet = statement.executeQuery("SELECT id FROM lecturer");
+                    System.out.print("Select the ID of the lecturer: ");
+                    while (resultSet.next()) {
+                        Lecturer lecturer = new Lecturer();
+                        lecturer.setLecturer_id(resultSet.getString("id"));
+                        lecturerID.add(resultSet.getString("id"));
+                        System.out.print(lecturer.getLecturer_id() + ", ");
+                    }
+
+                    correctID = 0;
+                    while (correctID == 0) { //Checks if the ID inputted is actually an option using an arraylist
+                        lecturerInput = scan.nextLine();
+                        if (lecturerID.contains(lecturerInput)) {
+                            correctID = 1;
+                        } else {
+                            System.out.println("Please enter an existing ID");
+                        }
+                    }
+
+                    PreparedStatement pStatement = connection.prepareStatement("INSERT INTO lecturer_module(module_id, lecturer_id) VALUES (?,?)");
+                    pStatement.setString(1, moduleInput);
+                    pStatement.setString(2, lecturerInput);
+                    pStatement.executeUpdate();
+                    System.out.println("Successfully added module to lecturer");
+
+                } catch (SQLException e) {
+                    System.out.println("Failed to add the information");
+                }
+                break;
+
             default:
                 System.out.println("Invalid option. Please try again");
                 break;
@@ -343,7 +519,7 @@ public class CollegeApp {
 
     public static void update() {
         System.out.println("Choose what you would like to update");
-        System.out.println("1 - Student Details\n2 - Student Address\n3 - Student Course\n4 - Course");
+        System.out.println("1 - Student Details\n2 - Student Address\n3 - Student Course\n4 - Course\n5 - Lecturer Details\n6 - Lecturer Modules\n7 - Module");
         Scanner scan = new Scanner(System.in);
         String choice = scan.nextLine();
         String setColumn = "";
@@ -575,6 +751,19 @@ public class CollegeApp {
                 }
                 break;
 
+            case "5":
+                //This will be to update the lecturer details (first_name, last_name, email). Case 1 is very similar to how it should look
+                break;
+
+            case "6":
+                //This will be to update lecturer module(what module they teach). Case 3 is similar to how it should look.
+                //Each module can have only one lecturer, while a lecturer can have more than one module, i.e. prompt user for the module id first and then prompt for the lecturer
+                break;
+
+            case "7":
+                //This case will be to update the module details(name, credits, year). Case 4 is very similar to how it should look
+                break;
+
             default:
                 System.out.println("Not a choice");
                 break;
@@ -583,7 +772,7 @@ public class CollegeApp {
 
     public static void delete() {
 
-        System.out.println("Please select what you would like to delete\n1 - Student Information\n2 - Course");
+        System.out.println("Please select what you would like to delete\n1 - Student Information\n2 - Course\n3 - Lecturer Information\n4 - Module");
         Scanner scan = new Scanner(System.in);
         String choice = scan.nextLine();
         ArrayList<String> array = new ArrayList<>();
@@ -662,6 +851,16 @@ public class CollegeApp {
                     System.out.println("The system failed to remove the information");
                     e.printStackTrace();
                 }
+                break;
+
+            case "3":
+                //This case will be for deleting lecturer information. Very similar to case 1.
+                //Remember you have to delete from the lecturer_module table first before deleting from the lecturer table
+                break;
+
+            case "4":
+                //This case will be for deleting a module. Very similar to case 2.
+                //Remember you have to delete from lecturer_module table first before deleting from the lecturer table
                 break;
 
             default:

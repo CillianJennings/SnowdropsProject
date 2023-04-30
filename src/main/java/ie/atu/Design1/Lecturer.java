@@ -1,12 +1,13 @@
 package ie.atu.Design1;
 
-public class Lecture {
+public class Lecturer implements College {
 
     private String lecturer_id;
     private String first_name;
     private String last_name;
+    private String email;
 
-    public Lecture() {
+    public Lecturer() {
     }
 
     public String getLecturer_id() {
@@ -31,5 +32,13 @@ public class Lecture {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
