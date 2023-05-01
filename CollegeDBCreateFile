@@ -115,7 +115,7 @@ INSERT INTO lecturer (first_name, last_name, email) VALUES
     ('Nancy', 'Rodriguez', 'nancy.lec@atu.ie');
 
 INSERT INTO module (name, credits, year) VALUES
-    ('Maths 1', '10', '1st Year');	
+    ('Maths 1', '10', '1st Year'),	
     ('Maths 2', '10', '2nd Year'),
     ('Maths 3', '10', '3rd Year'),
     ('Maths 4', '10', '4th Year'),
