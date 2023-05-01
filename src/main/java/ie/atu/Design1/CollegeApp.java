@@ -816,6 +816,61 @@ public class CollegeApp {
 
             case "7":
                 //This case will be to update the module details(name, credits, year). Case 4 is very similar to how it should look
+                System.out.println("Please enter the Module details you want to update:");
+
+                try (Connection connection = DatabaseUtils.getConnection();
+                     Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery("SELECT Module")) {
+                    System.out.print("module IDs: ");
+                    while (resultSet.next()) {
+                        Module module = new Module();
+                        module.setModule_id(resultSet.getString("id"));
+                        array.add(resultSet.getString("id"));
+                        System.out.print(module.getModule_id() + ", ");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error getting IDs");
+                }
+
+                while (correctID == 0) {
+                    inputID = scan.nextLine();
+                    if (array.contains(inputID)) {
+                        correctID = 1;
+                    } else {
+                        System.out.println("Please enter an existing ID");
+                    }
+                }
+
+                exit = "1";
+                while (exit.equals("1")) {
+                    System.out.println("Please select the column you would like to update:\n1 - Name\n2 - Credits\n3 - Year");
+                    int columnOption = scan.nextInt();
+                    String bugfix = scan.nextLine(); //Required to make the next scan.nextLine() work
+                    if (columnOption == 1) {
+                        setColumn = "name";
+                    }
+                    if (columnOption == 2) {
+                        setColumn = "credits";
+                    }
+                    if (columnOption == 3) {
+                        setColumn = "year";
+                    }
+
+                    System.out.println("Type in the updated information: ");
+                    String update = scan.nextLine();
+
+                    updateSQL = "UPDATE module SET " + setColumn + " = '" + update + "' WHERE id = '" + inputID + "'";
+
+                    try (Connection connection = DatabaseUtils.getConnection();
+                         Statement statement = connection.createStatement()) {
+                        int rowsUpdated = statement.executeUpdate(updateSQL);
+                        System.out.println("Rows updated: " + rowsUpdated);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Press 1 to update another column\nOtherwise press any other button to exit");
+                    exit = scan.nextLine();
+                }
                 break;
 
             default:
