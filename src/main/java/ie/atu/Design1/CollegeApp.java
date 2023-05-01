@@ -582,7 +582,7 @@ public class CollegeApp {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("Press 1 to update another column\nOtherwise press any other number to exit");
+                    System.out.println("Press 1 to update another column\nOtherwise press any other button to exit");
                     exit = scan.nextLine();
                 }
                 break;
@@ -752,12 +752,11 @@ public class CollegeApp {
                 break;
 
             case "5":
-                //This will be to update the lecturer details (first_name, last_name, email). Case 1 is very similar to how it should look
-                System.out.println("Please enter lecture to update their details:");
+                System.out.println("Please enter the ID of the lecturer you want to update");
                 try (Connection connection = DatabaseUtils.getConnection();
                      Statement statement = connection.createStatement();
-                     ResultSet resultSet = statement.executeQuery("SELECT id FROM lecture")) {
-                    System.out.print("Lectures ID: ");
+                     ResultSet resultSet = statement.executeQuery("SELECT id FROM lecturer")) {
+                    System.out.print("Lecturer IDs: ");
                     while (resultSet.next()) {
                         Lecturer lecturer = new Lecturer();
                         lecturer.setLecturer_id(resultSet.getString("id"));
@@ -795,7 +794,7 @@ public class CollegeApp {
                     System.out.println("Type in the updated information: ");
                     String update = scan.nextLine();
 
-                    updateSQL = "UPDATE lecture SET " + setColumn + " = '" + update + "' WHERE id = '" + inputID + "'";
+                    updateSQL = "UPDATE lecturer SET " + setColumn + " = '" + update + "' WHERE id = '" + inputID + "'";
 
                     try (Connection connection = DatabaseUtils.getConnection();
                          Statement statement = connection.createStatement()) {
@@ -804,24 +803,67 @@ public class CollegeApp {
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
-                    System.out.println("Press 1 to update another column\nOtherwise press any other number to exit");
+                    System.out.println("Press 1 to update another column\nOtherwise press any other button to exit");
                     exit = scan.nextLine();
                 }
                 break;
 
             case "6":
-                //This will be to update lecturer module(what module they teach). Case 3 is similar to how it should look.
-                //Each module can have only one lecturer, while a lecturer can have more than one module, i.e. prompt user for the module id first and then prompt for the lecturer
+                System.out.println("Please enter module ID to update the lecturer");
+
+                try (Connection connection = DatabaseUtils.getConnection();
+                     Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery("SELECT module_id FROM lecturer_module")) {
+                    System.out.print("Module IDs: ");
+                    while (resultSet.next()) {
+                        Module module = new Module();
+                        module.setModule_id(resultSet.getString("module_id"));
+                        array.add(resultSet.getString("module_id"));
+                        System.out.print(module.getModule_id() + ", ");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error getting IDs");
+                }
+
+                while (correctID == 0) {
+                    inputID = scan.nextLine();
+                    if (array.contains(inputID)) {
+                        correctID = 1;
+                    } else {
+                        System.out.println("Please enter an existing ID");
+                    }
+                }
+
+                try (Connection connection = DatabaseUtils.getConnection();
+                     Statement statement = connection.createStatement()) {
+
+                    ResultSet resultSet = statement.executeQuery("SELECT id, first_name FROM lecturer");
+                    System.out.println("Choice of lecturers: ");
+                    Lecturer lecturer = new Lecturer();
+                    while (resultSet.next()) {
+                        lecturer.setLecturer_id(resultSet.getString("id"));
+                        lecturer.setFirst_name(resultSet.getString("first_name"));
+                        System.out.println(lecturer.getLecturer_id() + "\t" + lecturer.getFirst_name());
+                    }
+
+                    System.out.println("Please enter the ID of the lecturer");
+                    lecturer.setLecturer_id(scan.nextLine());
+
+                    updateSQL = "UPDATE lecturer_module SET lecturer_id = '" + lecturer.getLecturer_id() + "' WHERE module_id = '" + inputID + "'";
+                    int rowsUpdated = statement.executeUpdate(updateSQL);
+                    System.out.println("Rows updated: " + rowsUpdated);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
                 break;
 
             case "7":
-                //This case will be to update the module details(name, credits, year). Case 4 is very similar to how it should look
                 System.out.println("Please enter the Module details you want to update:");
 
                 try (Connection connection = DatabaseUtils.getConnection();
                      Statement statement = connection.createStatement();
-                     ResultSet resultSet = statement.executeQuery("SELECT Module")) {
-                    System.out.print("module IDs: ");
+                     ResultSet resultSet = statement.executeQuery("SELECT id FROM module")) {
+                    System.out.print("Module IDs: ");
                     while (resultSet.next()) {
                         Module module = new Module();
                         module.setModule_id(resultSet.getString("id"));
@@ -963,13 +1005,75 @@ public class CollegeApp {
                 break;
 
             case "3":
-                //This case will be for deleting lecturer information. Very similar to case 1.
-                //Remember you have to delete from the lecturer_module table first before deleting from the lecturer table
+                try {
+                    Connection connection = DatabaseUtils.getConnection();
+                    String input = "";
+                    Statement statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery("SELECT id FROM lecturer");
+                    System.out.print("Please select the ID of the lecturer you wish to delete: ");
+                    while (resultSet.next()) {
+                        Lecturer lecturer = new Lecturer();
+                        lecturer.setLecturer_id(resultSet.getString("id"));
+                        array.add(resultSet.getString("id"));
+                        System.out.print(lecturer.getLecturer_id() + ", ");
+                    }
+
+                    int correctID = 0;
+                    while (correctID == 0) { //Checks if the ID inputted is actually an option using an arraylist
+                        input = scan.nextLine();
+                        if (array.contains(input)) {
+                            correctID = 1;
+                        } else {
+                            System.out.println("Please enter an existing ID");
+                        }
+                    }
+
+                    PreparedStatement stmt = connection.prepareStatement("DELETE FROM lecturer_module WHERE lecturer_id = " + input);
+                    stmt.executeUpdate();
+                    stmt = connection.prepareStatement("DELETE FROM lecturer WHERE id = " + input);
+                    stmt.executeUpdate();
+                    System.out.println("Lecturer successfully deleted");
+
+                }catch (SQLException e){
+                    System.out.println("The system failed to remove the information");
+                    e.printStackTrace();
+                }
                 break;
 
             case "4":
-                //This case will be for deleting a module. Very similar to case 2.
-                //Remember you have to delete from lecturer_module table first before deleting from the lecturer table
+                try {
+                    Connection connection = DatabaseUtils.getConnection();
+                    String input = "";
+                    Statement statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery("SELECT id FROM module");
+                    System.out.print("Please select the ID of the module you wish to delete: ");
+                    while (resultSet.next()) {
+                        Module module = new Module();
+                        module.setModule_id(resultSet.getString("id"));
+                        array.add(resultSet.getString("id"));
+                        System.out.print(module.getModule_id() + ", ");
+                    }
+
+                    int correctID = 0;
+                    while (correctID == 0) { //Checks if the ID inputted is actually an option using an arraylist
+                        input = scan.nextLine();
+                        if (array.contains(input)) {
+                            correctID = 1;
+                        } else {
+                            System.out.println("Please enter an existing ID");
+                        }
+                    }
+
+                    PreparedStatement stmt = connection.prepareStatement("DELETE FROM lecturer_module WHERE module_id = " + input);
+                    stmt.executeUpdate();
+                    stmt = connection.prepareStatement("DELETE FROM module WHERE id = " + input);
+                    stmt.executeUpdate();
+                    System.out.println("Module successfully deleted");
+
+                } catch (SQLException e) {
+                    System.out.println("The system failed to remove the information");
+                    e.printStackTrace();
+                }
                 break;
 
             default:
