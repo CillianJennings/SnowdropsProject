@@ -65,7 +65,7 @@ public class CollegeApp {
     }
 
     public static void read() {   //Read from either one or multiple tables in College DB
-        System.out.println("1 - Choose one table\n2 - View all student details\n3 - View all lecturer details");
+        System.out.println("1 - Choose one table\n2 - View all student details\n3 - View all lecturer details\n4 - View Course and its Modules");
         Scanner scan = new Scanner(System.in);
         String choice = scan.nextLine();
         Formatter fmt = new Formatter();
@@ -160,10 +160,10 @@ public class CollegeApp {
                         while (resultSet.next()) {
                             Module module = new Module();
                             fmt = new Formatter();
-                            module.setModule_id(resultSet.getString("id"));
-                            module.setName(resultSet.getString("name"));
-                            module.setCredits(resultSet.getString("credits"));
-                            module.setYear(resultSet.getString("year"));
+                            module.setModule_id(resultSet.getString("module_id"));
+                            module.setName(resultSet.getString("module_name"));
+                            module.setCredits(resultSet.getString("module_credits"));
+                            module.setYear(resultSet.getString("module_year"));
 
                             fmt.format("%10s %20s %15s %15s", module.getModule_id(), module.getName(), module.getCredits(), module.getYear());
                             System.out.println(fmt);
@@ -214,9 +214,9 @@ public class CollegeApp {
 
             case "3":
                 //Joins lecturer and module
-                selectSQL = "SELECT l.id, l.first_name, l.last_name, l.email, m.name, m.credits, m.year FROM lecturer l" +
+                selectSQL = "SELECT l.id, l.first_name, l.last_name, l.email, m.module_name, m.module_credits, m.module_year FROM lecturer l" +
                         " JOIN lecturer_module i ON l.id = i.lecturer_id" +
-                        " JOIN module m ON i.module_id = m.id";
+                        " JOIN module m ON i.module_id = m.module_id";
 
                 try (Connection connection = DatabaseUtils.getConnection();
                      Statement statement = connection.createStatement();
@@ -232,12 +232,48 @@ public class CollegeApp {
                         module.setFirst_name(resultSet.getString("first_name"));
                         module.setLast_name(resultSet.getString("last_name"));
                         module.setEmail(resultSet.getString("email"));
-                        module.setName(resultSet.getString("name"));
-                        module.setCredits(resultSet.getString("credits"));
-                        module.setYear(resultSet.getString("year"));
+                        module.setName(resultSet.getString("module_name"));
+                        module.setCredits(resultSet.getString("module_credits"));
+                        module.setYear(resultSet.getString("module_year"));
 
                         fmt.format("%10s %15s %15s %22s %20s %15s %15s", module.getLecturer_id(), module.getFirst_name(), module.getLast_name(), module.getEmail(),
                                 module.getName(), module.getCredits(), module.getYear());
+                        System.out.println(fmt);
+                    }
+
+                } catch (SQLException e) {
+                    System.out.println("Failed to read from database");
+                }
+                break;
+
+            case "4":
+                //Joins course and module
+                selectSQL = "SELECT c.id, c.name, c.points, c.length, m.module_id, m.module_name, m.module_credits, m.module_year FROM course c" +
+                        " JOIN module_course i ON c.id = i.course_id" +
+                        " JOIN module m ON i.module_id = m.module_id";
+
+                try (Connection connection = DatabaseUtils.getConnection();
+                     Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery(selectSQL)) {
+
+                    fmt = new Formatter();
+                    fmt.format("%10s %15s %15s %15s %15s %22s %15s %15s", "Course ID", "Course Name", "Course Points", "Course Length", "Module ID", "Module Name", "Module Credits", "Module Year");
+                    System.out.println(fmt);
+                    while (resultSet.next()) {
+                        Module module = new Module();
+                        Courses course = new Courses();
+                        fmt = new Formatter();
+                        course.setCourse_id(resultSet.getString("id"));
+                        course.setName(resultSet.getString("name"));
+                        course.setPoints(resultSet.getString("points"));
+                        course.setLength(resultSet.getString("length"));
+                        module.setModule_id(resultSet.getString("module_id"));
+                        module.setName(resultSet.getString("module_name"));
+                        module.setCredits(resultSet.getString("module_credits"));
+                        module.setYear(resultSet.getString("module_year"));
+
+                        fmt.format("%10s %15s %15s %15s %15s %22s %15s %15s", course.getCourse_id(), course.getName(), course.getPoints(), course.getLength(),
+                                module.getModule_id(), module.getName(), module.getCredits(), module.getYear());
                         System.out.println(fmt);
                     }
 
@@ -253,7 +289,8 @@ public class CollegeApp {
     }
 
     public static void write() {
-        System.out.println("What information would you like to add to the database\n1 - New Student\n2 - New Course\n3 - Add a course to an existing student\n4 - New lecturer\n5 - New Module\n6 - Add a lecturer to an existing module");
+        System.out.println("What information would you like to add to the database\n1 - New Student\n2 - New Course\n3 - Add a course to an existing student\n4 - New lecturer\n5 - New Module" +
+                "\n6 - Add a lecturer to an existing module\n7 - Add course to an existing module");
         Scanner keyboard = new Scanner(System.in);
         String option = keyboard.nextLine();
 
@@ -431,7 +468,7 @@ public class CollegeApp {
             case "5":
                 try {
                     Connection connection = DatabaseUtils.getConnection();
-                    PreparedStatement record = connection.prepareStatement("INSERT INTO module(name, credits, year) VALUES (?,?,?)");
+                    PreparedStatement record = connection.prepareStatement("INSERT INTO module(module_name, module_credits, module_year) VALUES (?,?,?)");
                     scan = new Scanner(System.in);
                     Module module = new Module();
                     System.out.println("Please enter name");
@@ -462,12 +499,12 @@ public class CollegeApp {
 
                 try (Connection connection = DatabaseUtils.getConnection()) {
                     Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery("SELECT id FROM module");
+                    ResultSet resultSet = statement.executeQuery("SELECT module_id FROM module");
                     System.out.print("Select the ID of the module that needs a lecturer: ");
                     while (resultSet.next()) {
                         Module module = new Module();
-                        module.setModule_id(resultSet.getString("id"));
-                        moduleID.add(resultSet.getString("id"));
+                        module.setModule_id(resultSet.getString("module_id"));
+                        moduleID.add(resultSet.getString("module_id"));
                         System.out.print(module.getModule_id() + ", ");
                     }
 
@@ -509,6 +546,63 @@ public class CollegeApp {
                     System.out.println("Failed to add the information");
                 }
                 break;
+            case "7":
+                courseID = new ArrayList<>();
+                moduleID = new ArrayList<>();
+                courseInput = "";
+                moduleInput = "";
+                correctID = 0;
+                scan = new Scanner(System.in);
+
+                try (Connection connection = DatabaseUtils.getConnection()) {
+                    Statement statement = connection.createStatement();
+                    ResultSet resultSet = statement.executeQuery("SELECT module_id FROM module");
+                    System.out.print("Select the ID of the module that needs a course: ");
+                    while (resultSet.next()) {
+                        Module module = new Module();
+                        module.setModule_id(resultSet.getString("module_id"));
+                        moduleID.add(resultSet.getString("module_id"));
+                        System.out.print(module.getModule_id() + ", ");
+                    }
+
+                    while (correctID == 0) {
+                        moduleInput = scan.nextLine();
+                        if (moduleID.contains(moduleInput)) {
+                            correctID = 1;
+                        } else {
+                            System.out.println("Please enter an existing ID");
+                        }
+                    }
+
+                    resultSet = statement.executeQuery("SELECT id FROM course");
+                    System.out.print("Select the ID of the course: ");
+                    while (resultSet.next()) {
+                        Courses course = new Courses();
+                        course.setCourse_id(resultSet.getString("id"));
+                        courseID.add(resultSet.getString("id"));
+                        System.out.print(course.getCourse_id() + ", ");
+                    }
+
+                    correctID = 0;
+                    while (correctID == 0) { //Checks if the ID inputted is actually an option using an arraylist
+                        courseInput = scan.nextLine();
+                        if (courseID.contains(courseInput)) {
+                            correctID = 1;
+                        } else {
+                            System.out.println("Please enter an existing ID");
+                        }
+                    }
+
+                    PreparedStatement pStatement = connection.prepareStatement("INSERT INTO module_course(module_id, course_id) VALUES (?,?)");
+                    pStatement.setString(1, moduleInput);
+                    pStatement.setString(2, courseInput);
+                    pStatement.executeUpdate();
+                    System.out.println("Successfully added module to lecturer");
+
+                } catch (SQLException e) {
+                    System.out.println("Failed to add the information");
+                }
+                break;
 
             default:
                 System.out.println("Invalid option. Please try again");
@@ -519,7 +613,7 @@ public class CollegeApp {
 
     public static void update() {
         System.out.println("Choose what you would like to update");
-        System.out.println("1 - Student Details\n2 - Student Address\n3 - Student Course\n4 - Course\n5 - Lecturer Details\n6 - Lecturer Modules\n7 - Module");
+        System.out.println("1 - Student Details\n2 - Student Address\n3 - Student Course\n4 - Course\n5 - Lecturer Details\n6 - Lecturer Modules\n7 - Module\n8 - Course Modules");
         Scanner scan = new Scanner(System.in);
         String choice = scan.nextLine();
         String setColumn = "";
@@ -862,12 +956,12 @@ public class CollegeApp {
 
                 try (Connection connection = DatabaseUtils.getConnection();
                      Statement statement = connection.createStatement();
-                     ResultSet resultSet = statement.executeQuery("SELECT id FROM module")) {
+                     ResultSet resultSet = statement.executeQuery("SELECT module_id FROM module")) {
                     System.out.print("Module IDs: ");
                     while (resultSet.next()) {
                         Module module = new Module();
-                        module.setModule_id(resultSet.getString("id"));
-                        array.add(resultSet.getString("id"));
+                        module.setModule_id(resultSet.getString("module_id"));
+                        array.add(resultSet.getString("module_id"));
                         System.out.print(module.getModule_id() + ", ");
                     }
                 } catch (SQLException e) {
@@ -889,19 +983,19 @@ public class CollegeApp {
                     int columnOption = scan.nextInt();
                     String bugfix = scan.nextLine(); //Required to make the next scan.nextLine() work
                     if (columnOption == 1) {
-                        setColumn = "name";
+                        setColumn = "module_name";
                     }
                     if (columnOption == 2) {
-                        setColumn = "credits";
+                        setColumn = "module_credits";
                     }
                     if (columnOption == 3) {
-                        setColumn = "year";
+                        setColumn = "module_year";
                     }
 
                     System.out.println("Type in the updated information: ");
                     String update = scan.nextLine();
 
-                    updateSQL = "UPDATE module SET " + setColumn + " = '" + update + "' WHERE id = '" + inputID + "'";
+                    updateSQL = "UPDATE module SET " + setColumn + " = '" + update + "' WHERE module_id = '" + inputID + "'";
 
                     try (Connection connection = DatabaseUtils.getConnection();
                          Statement statement = connection.createStatement()) {
@@ -912,6 +1006,55 @@ public class CollegeApp {
                     }
                     System.out.println("Press 1 to update another column\nOtherwise press any other button to exit");
                     exit = scan.nextLine();
+                }
+                break;
+
+            case "8":
+                System.out.println("Please enter module ID to update the course");
+
+                try (Connection connection = DatabaseUtils.getConnection();
+                     Statement statement = connection.createStatement();
+                     ResultSet resultSet = statement.executeQuery("SELECT module_id FROM module_course")) {
+                    System.out.print("Module IDs: ");
+                    while (resultSet.next()) {
+                        Module module = new Module();
+                        module.setModule_id(resultSet.getString("module_id"));
+                        array.add(resultSet.getString("module_id"));
+                        System.out.print(module.getModule_id() + ", ");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("Error getting IDs");
+                }
+
+                while (correctID == 0) {
+                    inputID = scan.nextLine();
+                    if (array.contains(inputID)) {
+                        correctID = 1;
+                    } else {
+                        System.out.println("Please enter an existing ID");
+                    }
+                }
+
+                try (Connection connection = DatabaseUtils.getConnection();
+                     Statement statement = connection.createStatement()) {
+
+                    ResultSet resultSet = statement.executeQuery("SELECT id, name FROM course");
+                    System.out.println("Choice of Courses: ");
+                    Courses course = new Courses();
+                    while (resultSet.next()) {
+                        course.setCourse_id(resultSet.getString("id"));
+                        course.setName(resultSet.getString("name"));
+                        System.out.println(course.getCourse_id() + "\t" + course.getName());
+                    }
+
+                    System.out.println("Please enter the ID of the course");
+                    course.setCourse_id(scan.nextLine());
+
+                    updateSQL = "UPDATE module_course SET course_id = '" + course.getCourse_id() + "' WHERE module_id = '" + inputID + "'";
+                    int rowsUpdated = statement.executeUpdate(updateSQL);
+                    System.out.println("Rows updated: " + rowsUpdated);
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
                 break;
 
@@ -994,6 +1137,8 @@ public class CollegeApp {
 
                     PreparedStatement stmt = connection.prepareStatement("DELETE FROM course_student WHERE course_id = " + input);
                     stmt.executeUpdate();
+                    stmt = connection.prepareStatement("DELETE FROM module_course WHERE course_id = " + input);
+                    stmt.executeUpdate();
                     stmt = connection.prepareStatement("DELETE FROM course WHERE id = " + input);
                     stmt.executeUpdate();
                     System.out.println("Course successfully deleted");
@@ -1045,12 +1190,12 @@ public class CollegeApp {
                     Connection connection = DatabaseUtils.getConnection();
                     String input = "";
                     Statement statement = connection.createStatement();
-                    ResultSet resultSet = statement.executeQuery("SELECT id FROM module");
+                    ResultSet resultSet = statement.executeQuery("SELECT module_id FROM module");
                     System.out.print("Please select the ID of the module you wish to delete: ");
                     while (resultSet.next()) {
                         Module module = new Module();
-                        module.setModule_id(resultSet.getString("id"));
-                        array.add(resultSet.getString("id"));
+                        module.setModule_id(resultSet.getString("module_id"));
+                        array.add(resultSet.getString("module_id"));
                         System.out.print(module.getModule_id() + ", ");
                     }
 
@@ -1066,7 +1211,9 @@ public class CollegeApp {
 
                     PreparedStatement stmt = connection.prepareStatement("DELETE FROM lecturer_module WHERE module_id = " + input);
                     stmt.executeUpdate();
-                    stmt = connection.prepareStatement("DELETE FROM module WHERE id = " + input);
+                    stmt = connection.prepareStatement("DELETE FROM module_course WHERE module_id = " + input);
+                    stmt.executeUpdate();
+                    stmt = connection.prepareStatement("DELETE FROM module WHERE module_id = " + input);
                     stmt.executeUpdate();
                     System.out.println("Module successfully deleted");
 
