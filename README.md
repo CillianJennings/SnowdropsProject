@@ -12,3 +12,5 @@ DenisJ123 = CiaraC03
 Ellen signed in with two accounts: ellenmcintyre and ellenmcintyre123
 
 Chinonso Account is the G00403720
+
+Link to the video: https://youtu.be/4epB4n-v7rE
